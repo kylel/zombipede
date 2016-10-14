@@ -4,43 +4,49 @@ var snake, apple, squareSize, score, speed,
     textStyle_Key, textStyle_Value;
 var lastCell, oldLastCellx, oldLastCelly;
 var squareSize = 15;
+//TODO: remove these globals !!!
 
-function generateApple(){
 
+function generateApple(_game){
+        //TODO: make sure apple doesnt appear on the snake or too near it
 
         var randomX = Math.floor(Math.random() * 40 ) * squareSize + squareSize/2,
             randomY = Math.floor(Math.random() * 30 ) * squareSize + squareSize/2;
 
-        return new Human(game, randomX, randomY);
+        return new Human(_game, randomX, randomY);
 
 }
 
-var Game = {
+Zombipede.Game = function (game) {
+    //this.game = game;
+};
 
+Zombipede.Game.prototype = {
+    
     preload : function() {
-        game.load.image('snake', './assets/images/snake02.png');
-        game.load.image('apple', './assets/images/apple.png');
-        console.log(this);
+        //game.load.image('snake', './assets/images/snake02.png');
+        //game.load.image('apple', './assets/images/apple.png');
+        //console.log(this);
     },
 
     create : function() {
 
-        apple = generateApple();
-        snake = new Snake(game, apple);
+        apple = generateApple(this);
+        snake = new Snake(this, apple);
         score = 0; 
         speed = 0; 
  
-        game.stage.backgroundColor = '#061f27';
+        this.stage.backgroundColor = '#061f27';
 
         textStyle_Key = { font: "bold 14px sans-serif", fill: "#46c0f9", align: "center" };
         textStyle_Value = { font: "bold 18px sans-serif", fill: "#fff", align: "center" };
 
 
-        game.add.text(30, 20, "SCORE", textStyle_Key);
-        scoreTextValue = game.add.text(90, 18, score.toString(), textStyle_Value);
+        this.add.text(30, 20, "SCORE", textStyle_Key);
+        scoreTextValue = this.add.text(90, 18, score.toString(), textStyle_Value);
 
-        game.add.text(500, 20, "SPEED", textStyle_Key);
-        speedTextValue = game.add.text(558, 18, speed.toString(), textStyle_Value);
+        this.add.text(500, 20, "SPEED", textStyle_Key);
+        speedTextValue = this.add.text(558, 18, speed.toString(), textStyle_Value);
 
     },
 
@@ -50,10 +56,10 @@ var Game = {
 
 };
 
-var Human = function (game, x,y) {
-    Phaser.Sprite.call(this, game, x, y, 'apple');
+var Human = function (_game, x,y) {
+    Phaser.Sprite.call(this, _game, x, y, 'human');
     this.anchor.setTo(0.5);
-    game.add.existing(this);
+    _game.add.existing(this);
 };
 
 Human.prototype = Object.create(Phaser.Sprite.prototype);
@@ -65,11 +71,18 @@ Human.update = function () {
 
 var Snake = function (game, food) {
     this.segments = [];
+    this.game = game;
+    for(var i = 0; i < 10; i++){
+        this.segments[i] = this.game.add.sprite(150+i*squareSize + squareSize/2, 150 + squareSize/2, 'zombie');  // Parameters are (X coordinate, Y coordinate, image)
+        this.segments[i].anchor.setTo(.5); 
+        this.segments[i].angle = 90;         
+    }
+    
     this.speed = 0;
     this.direction = 'right';
     this.lastSegment = {};
     this.firstSegment = {};
-    this.game = game;
+    
     this.cursors = this.game.input.keyboard.createCursorKeys();
     //this.score = 0;
     this.updateDelay = 0;
@@ -79,11 +92,7 @@ var Snake = function (game, food) {
     
     this.food = food;
 
-    for(var i = 0; i < 10; i++){
-        this.segments[i] = this.game.add.sprite(150+i*squareSize + squareSize/2, 150 + squareSize/2, 'snake');  // Parameters are (X coordinate, Y coordinate, image)
-        this.segments[i].anchor.setTo(.5); 
-        this.segments[i].angle = 90;         
-    }
+    
 };
 
 Snake.prototype = Object.create(Object);
@@ -175,6 +184,7 @@ Snake.prototype.update = function () {
         this.selfCollision(this.firstCell);
 
         this.wallCollision(this.firstCell);
+        
 };
 
 Snake.prototype.selfCollision = function(head) {
@@ -182,7 +192,7 @@ Snake.prototype.selfCollision = function(head) {
     for(let i = 0; i < this.segments.length - 1; i++){
         if(head.x == this.segments[i].x && head.y == this.segments[i].y){
    
-            this.game.state.start('Game_Over');
+            this.game.state.start('GameOver');
         }
     }
 };
@@ -190,7 +200,7 @@ Snake.prototype.selfCollision = function(head) {
 Snake.prototype.wallCollision = function(head) {
     if(head.x >= 600 || head.x < 0 || head.y >= 450 || head.y < 0){
    
-        this.game.state.start('Game_Over');
+        this.game.state.start('GameOver');
     }
 };
 
@@ -203,7 +213,7 @@ Snake.prototype.appleCollision = function() {
    
             this.food.destroy();
    
-            this.food = generateApple();
+            this.food = generateApple(this.game);
             apple = this.food;
    
             score++;
