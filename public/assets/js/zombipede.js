@@ -5,6 +5,7 @@ var Snake = function (game, food) {
         this.segments[i] = this.game.add.sprite(256-i*64 + 64/2, 256 + 64/2, 'zombie');
         this.segments[i].anchor.setTo(.5); 
         this.segments[i].angle = 90;         
+        this.segments[i].frame = 0; 
     }
     
     this.speed = 0;
@@ -70,6 +71,10 @@ Snake.prototype.move = function () {
         this.segments[i].x = this.segments[i-1].x;
         this.segments[i].y = this.segments[i-1].y;
         this.segments[i].angle = this.segments[i-1].angle;
+        this.segments[i].frame+=1; 
+        if (this.segments[i].frame == 4) {
+            this.segments[i].frame = 0;
+        }
     }
     //move the head
     switch (this.direction) {
@@ -90,12 +95,17 @@ Snake.prototype.move = function () {
             this.segments[0].angle = 180;
             break;
     }
+    this.segments[0].frame+=1 ; 
+    if (this.segments[0].frame == 4) {
+        this.segments[0].frame = 0;
+    }
 };
 
 Snake.prototype.addSegment = function () {
     let spr = this.game.add.sprite(this.oldLastCellx, this.oldLastCelly, 'zombie');
     spr.anchor.setTo(.5);
     spr.angle = this.oldLastCellAngle;
+    spr.frame = 0;
     this.segments.push(spr);
     this.addNew = false;
     this.speed = Math.min(10, Math.floor(score/5));
