@@ -115,7 +115,7 @@ Snake.prototype.update = function () {
     this.checkInput();
     this.updateDelay++;
 
-    if (this.updateDelay == (20 - this.speed)) {//TODO: make this generic - its the same for human
+    if (this.updateDelay == (40 - this.speed)) {//TODO: make this generic - its the same for human
         this.move();
         this.appleCollision();
         this.selfCollision(this.segments[0]);
