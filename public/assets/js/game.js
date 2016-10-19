@@ -1,19 +1,20 @@
 var snake, apple, squareSize, score, speed,
     updateDelay, direction, new_direction,
     addNew, cursors, scoreTextValue, speedTextValue, 
-    textStyle_Key, textStyle_Value;
+    textStyle_Key, textStyle_Value, human;
+
 var lastCell, oldLastCellx, oldLastCelly;
 var squareSize = 64;
 //TODO: remove these globals !!!
 
 
-function generateApple(_game){
+function generateApple(_game, snake){
         //TODO: make sure apple doesnt appear on the snake or too near it
 
         var randomX = Math.floor(Math.random() * 1024/squareSize ) * squareSize + squareSize/2,
             randomY = Math.floor(Math.random() * 640/squareSize ) * squareSize + squareSize/2;
 
-        return new Human(_game, randomX, randomY);
+        return new Human(_game, randomX, randomY, snake);
 
 }
 
@@ -28,9 +29,12 @@ Zombipede.Game.prototype = {
     },
 
     create : function() {
+        //this.humans = this.add.group();
 
-        human = generateApple(this);
         snake = new Snake(this, human);
+        human = generateApple(this, snake);
+        snake.food = human;
+        
         score = 0; 
         speed = 0; 
  

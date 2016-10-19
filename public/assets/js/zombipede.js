@@ -1,13 +1,12 @@
 var Snake = function (game, food) {
     this.segments = [];
     this.game = game;
-    for(var i = 0; i < 3; i++){
-        this.segments[i] = this.game.add.sprite(256+i*64 + 64/2, 256 + 64/2, 'zombie');
+    for(let i = 0; i < 3; i++){
+        this.segments[i] = this.game.add.sprite(256-i*64 + 64/2, 256 + 64/2, 'zombie');
         this.segments[i].anchor.setTo(.5); 
         this.segments[i].angle = 90;         
     }
-    this.firstCell = this.segments[this.segments.length - 1];    
-    this.lastCell = this.segments[0];
+    
     this.speed = 0;
     this.direction = 'right';
    
@@ -16,6 +15,7 @@ var Snake = function (game, food) {
     this.updateDelay = 0;
     this.oldLastCellx = 0;
     this.oldLastCelly = 0;
+    this.oldLastCellAngle = 0;
     this.addNew = false;
     
     this.food = food;
@@ -26,8 +26,6 @@ Snake.prototype = Object.create(Object);
 Snake.prototype.constructor = Snake;
 
 Snake.prototype.checkInput = function () {
-    //this.newDirection = null;
-
     if (this.cursors.right.isDown && this.direction!='left')
     {
         this.newDirection = 'right';
@@ -46,49 +44,59 @@ Snake.prototype.checkInput = function () {
     }    
 };
 
-Snake.prototype.move = function () {
-    this.lastCell = this.segments.shift();
-    this.oldLastCellx = this.lastCell.x;
-    this.oldLastCelly = this.lastCell.y;
+Snake.prototype.isHere = function (x,y) {
+    let len = this.segments.length;
+    for (let i=0; i<len; i++) {
+        if (this.segments[i].x == x && this.segments[i].y == y) {
+            return true;
+        }
+    }
+    return false;
+};
 
-    if(this.newDirection){
+Snake.prototype.move = function () {
+    if (this.newDirection) {
         this.direction = this.newDirection;
         this.newDirection = null;
     }
-
-    if(this.direction == 'right'){
-        this.lastCell.x = this.firstCell.x + squareSize;
-        this.lastCell.y = this.firstCell.y;
-        this.lastCell.angle = 90;
+    
+    let len = this.segments.length;
+    //save old last cell info
+    this.oldLastCellx = this.segments[len-1].x;
+    this.oldLastCelly = this.segments[len-1].y;
+    this.oldLastCellAngle = this.segments[len-1].angle;
+    //move all of the segments other that the head
+    for (let i=len-1; i>0; i--) {
+        this.segments[i].x = this.segments[i-1].x;
+        this.segments[i].y = this.segments[i-1].y;
+        this.segments[i].angle = this.segments[i-1].angle;
     }
-    else if(this.direction == 'left'){
-        this.lastCell.x = this.firstCell.x - squareSize;
-        this.lastCell.y = this.firstCell.y;
-        this.lastCell.angle = -90;
+    //move the head
+    switch (this.direction) {
+        case 'right':
+            this.segments[0].x += squareSize;
+            this.segments[0].angle = 90;
+            break;
+        case 'left':
+            this.segments[0].x -= squareSize;
+            this.segments[0].angle = -90;
+            break;
+        case 'up':
+            this.segments[0].y -= squareSize;
+            this.segments[0].angle = 0;
+            break;
+        case 'down':
+            this.segments[0].y += squareSize;
+            this.segments[0].angle = 180;
+            break;
     }
-    else if(this.direction == 'up'){
-        this.lastCell.x = this.firstCell.x;
-        this.lastCell.y = this.firstCell.y - squareSize;
-        this.lastCell.angle = 0;
-    }
-    else if(this.direction == 'down'){
-        this.lastCell.x = this.firstCell.x;
-        this.lastCell.y = this.firstCell.y + squareSize;
-        this.lastCell.angle = 180;
-    }
-
-    for(let i = 0; i < this.segments.length; i++){
-        this.segments[i].scale.x *= -1;
-    }
-
-    this.segments.push(this.lastCell);
-    this.firstCell = this.lastCell;
 };
 
 Snake.prototype.addSegment = function () {
     let spr = this.game.add.sprite(this.oldLastCellx, this.oldLastCelly, 'zombie');
     spr.anchor.setTo(.5);
-    this.segments.unshift(spr);
+    spr.angle = this.oldLastCellAngle;
+    this.segments.push(spr);
     this.addNew = false;
     this.speed = Math.min(10, Math.floor(score/5));
 };
@@ -97,23 +105,22 @@ Snake.prototype.update = function () {
     this.checkInput();
     this.updateDelay++;
 
-    if (this.updateDelay % (20 - this.speed) == 0) {//TODO: make this generic - its the same for human
+    if (this.updateDelay == (20 - this.speed)) {//TODO: make this generic - its the same for human
         this.move();
+        this.appleCollision();
+        this.selfCollision(this.segments[0]);
+        this.wallCollision(this.segments[0]);
+        if(this.addNew){
+            this.addSegment();
+        }
+
         this.updateDelay = 0;
     }
-
-    if(this.addNew){
-        this.addSegment();
-    }
-
-    this.appleCollision();
-    this.selfCollision(this.firstCell);
-    this.wallCollision(this.firstCell);
 };
 
 Snake.prototype.selfCollision = function(head) {
    
-    for(let i = 0; i < this.segments.length - 1; i++){
+    for(let i = 1; i < this.segments.length; i++){
         if(head.x == this.segments[i].x && head.y == this.segments[i].y){
    
             this.game.state.start('GameOver');
@@ -123,26 +130,17 @@ Snake.prototype.selfCollision = function(head) {
 
 Snake.prototype.wallCollision = function(head) {
     if(head.x >= 1024 || head.x < 0 || head.y >= 640 || head.y < 0){
-   
         this.game.state.start('GameOver');
     }
 };
 
 Snake.prototype.appleCollision = function() {
-   
-    for(let i = 0; i < this.segments.length; i++){
-        if(this.segments[i].x == this.food.x && this.segments[i].y == this.food.y){
-   
-            this.addNew = true;
-   
-            this.food.destroy();
-   
-            this.food = generateApple(this.game);
-            human = this.food;
-   
-            score++;
-   
-            scoreTextValue.text = score.toString();
-        }
+    if (this.segments[0].x == this.food.x && this.segments[0].y == this.food.y) {
+        this.addNew = true;
+        this.food.destroy();
+        this.food = generateApple(this.game, this);//TODO fix this global var shiz
+        human = this.food;
+        score++;
+        scoreTextValue.text = score.toString();
     }
 };
