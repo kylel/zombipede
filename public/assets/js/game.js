@@ -44,9 +44,22 @@ function generateApple(_game, snake){
         }
 
         let pos;
+        let count = 0; // this is a bit of a hack:
+        //if the snake gets long enough to cover the entire circumference of the screen
+        //it may block the generation of a new human indefinitely and crash the game here
+        // so we give it a timeout and spawn the human in the middle of the screen...
+        //TODO: not sure what else to do about it...
 
         do {
             pos = positions[Math.floor(Math.random()*positions.length)];
+            count++;
+            if (count == 5) {
+                    pos = {
+                        x: gameWidth/2 + squareSize/2,
+                        y: gameHeight/2 + squareSize/2
+                    };
+                break;
+            }
         } while (snake.isHere(pos.x, pos.y));
 
         

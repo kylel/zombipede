@@ -72,7 +72,7 @@ Snake.prototype.move = function () {
         this.segments[i].y = this.segments[i-1].y;
         this.segments[i].angle = this.segments[i-1].angle;
         this.segments[i].frame+=1; 
-        if (this.segments[i].frame == 4) {
+        if (this.segments[i].frame == 2) {
             this.segments[i].frame = 0;
         }
     }
@@ -96,7 +96,7 @@ Snake.prototype.move = function () {
             break;
     }
     this.segments[0].frame+=1 ; 
-    if (this.segments[0].frame == 4) {
+    if (this.segments[0].frame == 2) {
         this.segments[0].frame = 0;
     }
 };
