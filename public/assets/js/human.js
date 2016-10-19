@@ -38,7 +38,7 @@ Human.prototype.move = function () {
     }
     if (this.zombies.isHere(x,y)) {
     	//cant move here
-    } else if (x>=1024 || x<0 || y>=640 || y<0) {
+    } else if (x>=gameWidth || x<0 || y>=gameHeight || y<0) {
     	//there is a wall. cant move here
     } else {
     	this.x = x;
