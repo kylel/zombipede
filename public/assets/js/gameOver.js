@@ -25,7 +25,7 @@ Zombipede.GameOver.prototype = {
 
     tweetScore: function () {
         var tweetbegin = 'http://twitter.com/home?status=';        
-        var tweettxt = 'I scored '+score+' in Zombipede! Can you beat me? -' + window.location.href + '.';        
+        var tweettxt = 'I scored '+score+' in Zombipede! How long can you get? -' + window.location.href + '.';        
         var finaltweet = tweetbegin +encodeURIComponent(tweettxt);        
         window.open(finaltweet,'_blank');    
     }

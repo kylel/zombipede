@@ -159,6 +159,7 @@ Snake.prototype.wallCollision = function(head) {
 Snake.prototype.appleCollision = function() {
     if (this.segments[0].x == this.food.x && this.segments[0].y == this.food.y) {
         this.addNew = true;
+        this.food.shirt.destroy();
         this.food.destroy();
         this.food = generateApple(this.game, this);//TODO fix this global var shiz
         human = this.food;

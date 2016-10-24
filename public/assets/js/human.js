@@ -10,6 +10,9 @@ var Human = function (_game, x,y, zombies) {
     this.zombies = zombies;
     this.frame = 0;
     this.alarmed = false;
+    this.shirt = _game.add.sprite(x,y,'human-shirts');
+    this.shirt.anchor.setTo(0.5);
+    this.shirt.frame = Math.floor(Math.random() * 4);;
 };
 
 Human.prototype = Object.create(Phaser.Sprite.prototype);
@@ -61,6 +64,9 @@ Human.prototype.move = function () {
     	this.x = x;
     	this.y = y;
     	this.angle = angle;
+    	this.shirt.x = x;
+    	this.shirt.y = y;
+    	this.shirt.angle = angle;
     }
     if (this.alarmed) {
     	this.frame+=1;

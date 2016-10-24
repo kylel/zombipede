@@ -9,7 +9,7 @@ var lastCell, oldLastCellx, oldLastCelly;
 //TODO: remove these globals !!!
 
 
-function generateApple(_game, snake){
+function generateApple(_game, snake){//TODO: dont do this every time!!!!
         //TODO: make sure apple doesnt appear on the snake or too near it
         let rows = gameHeight/squareSize;
         let cols = gameWidth/squareSize;
@@ -68,12 +68,16 @@ function generateApple(_game, snake){
 
         if (pos.x == squareSize/2) {
             apple.angle = 90;
+            apple.shirt.angle = 90;
         } else if (pos.x == gameWidth - squareSize/2) {
             apple.angle = -90;
+            apple.shirt.angle = -90;
         } else if (pos.y == squareSize/2) {
             apple.angle = 180;
+            apple.shirt.angle = 180;
         } else {
             apple.angle = 0;
+            apple.shirt.angle = 0;
         }
 
         return apple;
