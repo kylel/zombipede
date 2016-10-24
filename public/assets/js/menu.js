@@ -20,6 +20,8 @@ Zombipede.MainMenu.prototype = {
        but.anchor.setTo(0.5);
 	   this.music = this.add.audio('menuSound');
 	   this.music.play();
+       let txt = this.add.text(this.world.width, this.world.height, "Version 0.1", { font: "bold 16px sans-serif", fill: "#46c0f9", align: "right"});
+       txt.anchor.setTo(1,1);
     },
 
     startGame: function () {
