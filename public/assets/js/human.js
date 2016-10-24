@@ -4,7 +4,7 @@ var Human = function (_game, x,y, zombies) {
     _game.add.existing(this);
     this.game = _game;
     this.speed = 0;
-    this.updateCycles = 80;
+    this.updateCycles = 60;
     this.updateDelay = 0;
     this.direction = 'right';
     this.zombies = zombies;

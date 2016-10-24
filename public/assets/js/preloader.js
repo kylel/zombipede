@@ -17,6 +17,7 @@ Zombipede.Preloader.prototype = {
 	loadImages: function () {
 		this.load.image('menuScreen', './assets/images/menu.png');
 		this.load.image('classicButton', './assets/images/classicbutton.png');
+		this.load.image('tweetButton', './assets/images/tweetbutton.png');
 		this.load.image('gameOverScreen', './assets/images/gameover01.png');
 		this.load.spritesheet('zombie', './assets/images/zombie-anim.png', 64, 64);
 		this.load.spritesheet('human', './assets/images/human-anim.png', 64, 64);
@@ -26,3 +27,4 @@ Zombipede.Preloader.prototype = {
 		this.state.start('MainMenu');
 	}
 };
+

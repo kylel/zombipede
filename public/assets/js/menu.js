@@ -16,7 +16,8 @@ Zombipede.MainMenu.prototype = {
         // Add menu screen.
         // It will act as a button to start the game.
 	   this.add.image(0, 0, 'menuScreen',this);
-	   this.add.button(116, 293, 'classicButton', this.startGame, this);
+	   let but = this.add.button(this.world.centerX, 400, 'classicButton', this.startGame, this);
+       but.anchor.setTo(0.5);
 	   this.music = this.add.audio('menuSound');
 	   this.music.play();
     },

@@ -123,7 +123,7 @@ Snake.prototype.update = function () {
     this.checkInput();
     this.updateDelay++;
 
-    if (this.updateDelay == (40 - this.speed)) {
+    if (this.updateDelay == (30 - this.speed)) {
         //TODO: make this generic - its the same for human
         this.move();
         this.appleCollision();
@@ -147,8 +147,11 @@ Snake.prototype.selfCollision = function(head) {
     }
 };
 
+
+
 Snake.prototype.wallCollision = function(head) {
     if(head.x >= gameWidth || head.x < 0 || head.y >= gameHeight || head.y < 0){
+        //tweetscore();
         this.game.state.start('GameOver');
     }
 };
