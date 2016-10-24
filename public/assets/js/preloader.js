@@ -16,7 +16,7 @@ Zombipede.Preloader.prototype = {
 		this.load.image('classicButton', './assets/images/classicbutton.png');
 		this.load.image('gameOverScreen', './assets/images/gameover01.png');
 		this.load.spritesheet('zombie', './assets/images/zombie-anim.png', 64, 64);
-		this.load.image('human', './assets/images/apple.png');
+		this.load.spritesheet('human', './assets/images/human-anim.png', 64, 64);
 	},
 	
 	create: function () {

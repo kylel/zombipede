@@ -101,6 +101,14 @@ Snake.prototype.move = function () {
     }
 };
 
+Snake.prototype.getSegment = function (segmentNum) {
+    return this.segments[segmentNum];
+};
+
+Snake.prototype.getLength = function () {
+    return this.segments.length;
+};
+
 Snake.prototype.addSegment = function () {
     let spr = this.game.add.sprite(this.oldLastCellx, this.oldLastCelly, 'zombie');
     spr.anchor.setTo(.5);
@@ -108,7 +116,7 @@ Snake.prototype.addSegment = function () {
     spr.frame = 0;
     this.segments.push(spr);
     this.addNew = false;
-    this.speed = Math.min(10, Math.floor(score/5));
+    this.speed = Math.min(40, Math.floor(score/2));
 };
 
 Snake.prototype.update = function () {
