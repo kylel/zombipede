@@ -5,7 +5,10 @@ Zombipede.Preloader = function (game) {
 Zombipede.Preloader.prototype = {
 	preload: function () {
 		this.logo = this.add.sprite(this.world.centerX, 200, 'logo');
+		this.logo.scale.setTo(.5);
+		this.logo.anchor.setTo(.5);
 		this.loadingBar = this.add.sprite(this.world.centerX, 380, 'loadingBar');
+		this.loadingBar.anchor.setTo(.5);
 		this.loadImages();
 		this.load.audio('menuSound', './assets/sounds/menusound.mp3');
 		this.load.setPreloadSprite(this.loadingBar);
