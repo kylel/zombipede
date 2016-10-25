@@ -1,12 +1,9 @@
-
 Zombipede.GameOver = function (game) {
-    //this.game = game;
 };
 
 Zombipede.GameOver.prototype = {
 
     preload : function() {
-        //game.load.image('gameover', './assets/images/gameover01.png');
     },
 
     create : function() {
@@ -31,7 +28,3 @@ Zombipede.GameOver.prototype = {
     }
 
 };
-
-
-
-

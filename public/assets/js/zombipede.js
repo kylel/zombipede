@@ -25,8 +25,10 @@ var Snake = function (game, food) {
     this.newDirection = null;
     this.addFrame = 0;
     this.game.input.onDown.add(this.beginSwipe, this);
-    //this.game.input.onDown.add(this.mouseDown, this);
 
+    this.attackSounds = [];
+    this.attackSounds.push(this.game.add.audio('zombieAttack-00'));
+    this.attackSounds.push(this.game.add.audio('zombieAttack-01'));
 };
 
 Snake.prototype = Object.create(Object);
@@ -152,12 +154,9 @@ Snake.prototype.move = function () {
         seg.x = target.x;
         seg.y = target.y;
         seg.angle = target.angle;
-        //if (i==3) {console.log(seg.frame);}
         seg.frame++; 
-        //if (i==3) {console.log('now' + seg.frame);}
         if (seg.frame == seg._endFrame_ || seg.frame == 0) {
             seg.frame = seg._startFrame_;
-            //if (i==3) {console.log('->' + seg.frame);}
         }
     }
     //move the head
@@ -181,7 +180,7 @@ Snake.prototype.move = function () {
             break;
     }
     head.frame++; 
-    if (head.frame == head._endFrame_) {//TODO?
+    if (head.frame == head._endFrame_) {
         head.frame = head._startFrame_;
     }
 };
@@ -203,7 +202,7 @@ Snake.prototype.addSegment = function (frame) {
     spr._endFrame_ = spr.frame + 2;
     this.segments.push(spr);
     this.addNew = false;
-    this.speed = Math.min(40, Math.floor(score/2));
+    this.speed = Math.min(40, Math.floor(Zombipede.score/2));
 };
 
 Snake.prototype.update = function () {
@@ -238,7 +237,6 @@ Snake.prototype.selfCollision = function(head) {
 
 Snake.prototype.wallCollision = function(head) {
     if(head.x >= gameWidth || head.x < 0 || head.y >= gameHeight || head.y < 0){
-        //tweetscore();
         this.game.state.start('GameOver');
     }
 };
@@ -249,9 +247,15 @@ Snake.prototype.appleCollision = function() {
         this.addFrame = this.food.shirt.frame;
         this.food.shirt.destroy();
         this.food.destroy();
-        this.food = this.game.generateHuman(this.game, this);//TODO fix this global var shiz
-        human = this.food;
-        score++;
-        this.game.scoreTextValue.text = score.toString();
+        this.food = this.game.generateHuman(this.game, this);
+        Zombipede.human = this.food;
+        Zombipede.score++;
+        this.game.scoreTextValue.text = Zombipede.score.toString();
+        let audioIndex = Math.floor(Math.random() * 2);
+        this.attackSounds[audioIndex].play();
     }
+};
+
+Snake.prototype.distanceFrom = function(point) {
+
 };

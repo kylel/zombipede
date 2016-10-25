@@ -1,9 +1,5 @@
-var snake, apple, score, speed,
-    human;
-
-//TODO: remove these globals !!!
 Zombipede.Game = function (game) {
-    //this.game = game;
+
 };
 
 Zombipede.Game.prototype = {
@@ -40,53 +36,34 @@ Zombipede.Game.prototype = {
     },
 
     create : function() {
-        snake = new Snake(this, human);
-        human = this.generateHuman(this, snake);
-        snake.food = human;
+        Zombipede.snake = new Snake(this, Zombipede.human);
+        Zombipede.human = this.generateHuman(this, Zombipede.snake);
+        Zombipede.snake.food = Zombipede.human;
         
-        score = 0; 
-        speed = 0; 
+        Zombipede.score = 0; 
+        Zombipede.speed = 0; 
  
         this.stage.backgroundColor = '#061f27';
 
         this.add.text(30, 20, "SCORE", this.textStyle_Key);
-        this.scoreTextValue = this.add.text(90, 18, score.toString(), this.textStyle_Value);
+        this.scoreTextValue = this.add.text(90, 18, Zombipede.score.toString(), this.textStyle_Value);
 
         this.add.text(500, 20, "SPEED", this.textStyle_Key);
-        this.speedTextValue = this.add.text(558, 18, speed.toString(), this.textStyle_Value);
+        this.speedTextValue = this.add.text(558, 18, Zombipede.speed.toString(), this.textStyle_Value);
 
     },
 
     update: function() {
-        //human.update();
-        snake.update();
-        this.speedTextValue.text = '' + snake.speed;
+        Zombipede.snake.update();
+        this.speedTextValue.text = '' + Zombipede.snake.speed;
     },
 
-    generateHuman: function(_game, snake) {
+    generateHuman: function(_game) {
         let pos = {
             x:squareSize/2,
             y:squareSize/2
         };
-        let count = 0; // this is a bit of a hack:
-        //if the snake gets long enough to cover the entire circumference of the screen
-        //it may block the generation of a new human indefinitely and crash the game here
-        // so we give it a timeout and spawn the human in the middle of the screen...
-        //TODO: not sure what else to do about it...
-
-        /*do {
-            pos = this.positions[Math.floor(Math.random()*this.positions.length)];
-            count++;
-            if (count == 10) {
-                    do {
-                        pos.x = Math.floor(Math.random()*(this.cols-1))*squareSize+squareSize/2;
-                        pos.y = Math.floor(Math.random()*(this.rows-1))*squareSize+squareSize/2;
-                    } while (snake.isHere(pos.x, pos.y));
-                break;
-            }
-        } while (snake.isHere(pos.x, pos.y));
-
-        */
+        let count = 0;
 
         do {
             pos.x = Math.floor(Math.random()*(this.cols-1))*squareSize+squareSize/2;
@@ -95,9 +72,9 @@ Zombipede.Game.prototype = {
             if (count == 30) {
                 break;
             }
-        } while (snake.isHere(pos.x, pos.y));
+        } while (Zombipede.snake.isHere(pos.x, pos.y));
 
-        let apple = new Human(_game, pos.x, pos.y, snake);
+        let apple = new Human(_game, pos.x, pos.y, Zombipede.snake);
 
         if (pos.x == squareSize/2) {
             apple.angle = 90;

@@ -1,6 +1,9 @@
 Zombipede = {
 	//global vars
-	score: 0
+	score: 0,
+	snake: {},
+	human: {},
+	speed: 0
 };
 
 Zombipede.Boot = function (game) {

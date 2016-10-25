@@ -11,6 +11,8 @@ Zombipede.Preloader.prototype = {
 		this.loadingBar.anchor.setTo(.5);
 		this.loadImages();
 		this.load.audio('menuSound', './assets/sounds/menusound.mp3');
+		this.load.audio('zombieAttack-00', './assets/sounds/zombie-attack-00.wav');
+		this.load.audio('zombieAttack-01', './assets/sounds/zombie-attack-01.ogg');
 		this.load.setPreloadSprite(this.loadingBar);
 	},
 
