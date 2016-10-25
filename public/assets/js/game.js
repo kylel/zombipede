@@ -7,82 +7,6 @@ var lastCell, oldLastCellx, oldLastCelly;
 
 
 //TODO: remove these globals !!!
-
-
-function generateApple(_game, snake){//TODO: dont do this every time!!!!
-        //TODO: make sure apple doesnt appear on the snake or too near it
-        let rows = gameHeight/squareSize;
-        let cols = gameWidth/squareSize;
-        let positions = [];
-
-        for (let i=0; i<rows; i++) {
-            positions.push({
-                x: squareSize/2,
-                y: i*squareSize+squareSize/2
-            });
-        }
-
-        for (let i=0; i<rows; i++) {
-            positions.push({
-                x: gameWidth - squareSize/2,
-                y: i*squareSize+squareSize/2
-            });
-        }
-
-        for (let i=0; i<cols; i++) {
-            positions.push({
-                x: i*squareSize+squareSize/2,
-                y: squareSize/2
-            });
-        }
-
-        for (let i=0; i<cols; i++) {
-            positions.push({
-                x: i*squareSize+squareSize/2,
-                y: gameHeight - squareSize/2
-            });
-        }
-
-        let pos;
-        let count = 0; // this is a bit of a hack:
-        //if the snake gets long enough to cover the entire circumference of the screen
-        //it may block the generation of a new human indefinitely and crash the game here
-        // so we give it a timeout and spawn the human in the middle of the screen...
-        //TODO: not sure what else to do about it...
-
-        do {
-            pos = positions[Math.floor(Math.random()*positions.length)];
-            count++;
-            if (count == 5) {
-                    pos = {
-                        x: gameWidth/2 + squareSize/2,
-                        y: gameHeight/2 + squareSize/2
-                    };
-                break;
-            }
-        } while (snake.isHere(pos.x, pos.y));
-
-        
-
-        let apple = new Human(_game, pos.x, pos.y, snake);
-
-        if (pos.x == squareSize/2) {
-            apple.angle = 90;
-            apple.shirt.angle = 90;
-        } else if (pos.x == gameWidth - squareSize/2) {
-            apple.angle = -90;
-            apple.shirt.angle = -90;
-        } else if (pos.y == squareSize/2) {
-            apple.angle = 180;
-            apple.shirt.angle = 180;
-        } else {
-            apple.angle = 0;
-            apple.shirt.angle = 0;
-        }
-
-        return apple;
-}
-
 Zombipede.Game = function (game) {
     //this.game = game;
 };
@@ -90,14 +14,36 @@ Zombipede.Game = function (game) {
 Zombipede.Game.prototype = {
     
     preload : function() {
-        //preload
+        this.rows = gameHeight/squareSize;
+        this.cols = gameWidth/squareSize;
+        this.positions = [];
+
+        for (let i=0; i<this.rows; i++) {
+            this.positions.push({
+                x: squareSize/2,
+                y: i*squareSize+squareSize/2
+            });
+            this.positions.push({
+                x: gameWidth - squareSize/2,
+                y: i*squareSize+squareSize/2
+            });
+        }
+
+        for (let i=0; i<this.cols; i++) {
+            this.positions.push({
+                x: i*squareSize+squareSize/2,
+                y: squareSize/2
+            });
+            this.positions.push({
+                x: i*squareSize+squareSize/2,
+                y: gameHeight - squareSize/2
+            });
+        }
     },
 
     create : function() {
-        //this.humans = this.add.group();
-
         snake = new Snake(this, human);
-        human = generateApple(this, snake);
+        human = this.generateHuman(this, snake);
         snake.food = human;
         
         score = 0; 
@@ -121,6 +67,47 @@ Zombipede.Game.prototype = {
         //human.update();
         snake.update();
         speedTextValue.text = '' + snake.speed;
+    },
+
+    generateHuman: function(_game, snake) {
+        let pos;
+        let count = 0; // this is a bit of a hack:
+        //if the snake gets long enough to cover the entire circumference of the screen
+        //it may block the generation of a new human indefinitely and crash the game here
+        // so we give it a timeout and spawn the human in the middle of the screen...
+        //TODO: not sure what else to do about it...
+
+        do {
+            pos = this.positions[Math.floor(Math.random()*this.positions.length)];
+            count++;
+            if (count == 10) {
+                    do {
+                        pos.x = Math.floor(Math.random()*this.cols*squareSize+squareSize/2);
+                        pos.y = Math.floor(Math.random()*this.rows*squareSize+squareSize/2);
+                    } while (snake.isHere(pos.x, pos.y));
+                break;
+            }
+        } while (snake.isHere(pos.x, pos.y));
+
+        
+
+        let apple = new Human(_game, pos.x, pos.y, snake);
+
+        if (pos.x == squareSize/2) {
+            apple.angle = 90;
+            apple.shirt.angle = 90;
+        } else if (pos.x == gameWidth - squareSize/2) {
+            apple.angle = -90;
+            apple.shirt.angle = -90;
+        } else if (pos.y == squareSize/2) {
+            apple.angle = 180;
+            apple.shirt.angle = 180;
+        } else {
+            apple.angle = 0;
+            apple.shirt.angle = 0;
+        }
+
+        return apple;
     }
 
 };

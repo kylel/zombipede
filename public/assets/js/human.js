@@ -27,7 +27,6 @@ Human.prototype.move = function () {
 
 	let snakeLength = this.zombies.getLength();
     for (let i=0; i<snakeLength; i++) {
-    	//console.log(i);
     	let dist = Phaser.Point.distance(this, this.zombies.getSegment(i), true);
     	if (dist < squareSize*4) {
     		step = squareSize;

@@ -6,6 +6,8 @@ var Snake = function (game, food) {
         this.segments[i].anchor.setTo(.5); 
         this.segments[i].angle = 90;         
         this.segments[i].frame = 0; 
+        this.segments[i]._startFrame_ = 0; 
+        this.segments[i]._endFrame_ = 2; 
     }
     
     this.speed = 0;
@@ -21,6 +23,7 @@ var Snake = function (game, food) {
     
     this.food = food;
     this.newDirection = null;
+    this.addFrame = 0;
 };
 
 Snake.prototype = Object.create(Object);
@@ -68,36 +71,42 @@ Snake.prototype.move = function () {
     this.oldLastCellAngle = this.segments[len-1].angle;
     //move all of the segments other that the head
     for (let i=len-1; i>0; i--) {
-        this.segments[i].x = this.segments[i-1].x;
-        this.segments[i].y = this.segments[i-1].y;
-        this.segments[i].angle = this.segments[i-1].angle;
-        this.segments[i].frame+=1; 
-        if (this.segments[i].frame == 2) {
-            this.segments[i].frame = 0;
+        let target = this.segments[i-1];
+        let seg = this.segments[i];
+        seg.x = target.x;
+        seg.y = target.y;
+        seg.angle = target.angle;
+        //if (i==3) {console.log(seg.frame);}
+        seg.frame++; 
+        //if (i==3) {console.log('now' + seg.frame);}
+        if (seg.frame == seg._endFrame_ || seg.frame == 0) {
+            seg.frame = seg._startFrame_;
+            //if (i==3) {console.log('->' + seg.frame);}
         }
     }
     //move the head
+    let head = this.segments[0];
     switch (this.direction) {
         case 'right':
-            this.segments[0].x += squareSize;
-            this.segments[0].angle = 90;
+            head.x += squareSize;
+            head.angle = 90;
             break;
         case 'left':
-            this.segments[0].x -= squareSize;
-            this.segments[0].angle = -90;
+            head.x -= squareSize;
+            head.angle = -90;
             break;
         case 'up':
-            this.segments[0].y -= squareSize;
-            this.segments[0].angle = 0;
+            head.y -= squareSize;
+            head.angle = 0;
             break;
         case 'down':
-            this.segments[0].y += squareSize;
-            this.segments[0].angle = 180;
+            head.y += squareSize;
+            head.angle = 180;
             break;
     }
-    this.segments[0].frame+=1 ; 
-    if (this.segments[0].frame == 2) {
-        this.segments[0].frame = 0;
+    head.frame++; 
+    if (head.frame == head._endFrame_) {//TODO?
+        head.frame = head._startFrame_;
     }
 };
 
@@ -109,11 +118,13 @@ Snake.prototype.getLength = function () {
     return this.segments.length;
 };
 
-Snake.prototype.addSegment = function () {
+Snake.prototype.addSegment = function (frame) {
     let spr = this.game.add.sprite(this.oldLastCellx, this.oldLastCelly, 'zombie');
     spr.anchor.setTo(.5);
     spr.angle = this.oldLastCellAngle;
-    spr.frame = 0;
+    spr.frame = 2*this.addFrame;
+    spr._startFrame_ = spr.frame;
+    spr._endFrame_ = spr.frame + 2;
     this.segments.push(spr);
     this.addNew = false;
     this.speed = Math.min(40, Math.floor(score/2));
@@ -130,7 +141,7 @@ Snake.prototype.update = function () {
         this.selfCollision(this.segments[0]);
         this.wallCollision(this.segments[0]);
         if(this.addNew){
-            this.addSegment();
+            this.addSegment(this.addFrame);
         }
 
         this.updateDelay = 0;
@@ -159,9 +170,10 @@ Snake.prototype.wallCollision = function(head) {
 Snake.prototype.appleCollision = function() {
     if (this.segments[0].x == this.food.x && this.segments[0].y == this.food.y) {
         this.addNew = true;
+        this.addFrame = this.food.shirt.frame;
         this.food.shirt.destroy();
         this.food.destroy();
-        this.food = generateApple(this.game, this);//TODO fix this global var shiz
+        this.food = this.game.generateHuman(this.game, this);//TODO fix this global var shiz
         human = this.food;
         score++;
         scoreTextValue.text = score.toString();
