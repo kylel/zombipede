@@ -10,8 +10,10 @@ Zombipede.GameOver.prototype = {
 
         this.add.button(0, 0, 'gameOverScreen', this.startGame, this);
 
-        this.add.text(235, 350, "LAST SCORE", { font: "bold 16px sans-serif", fill: "#46c0f9", align: "center"});
-        this.add.text(350, 348, score.toString(), { font: "bold 20px sans-serif", fill: "#fff", align: "center" });
+        this.add.text(235, 350, "LAST SCORE", 
+            { font: "bold 16px sans-serif", fill: "#46c0f9", align: "center"});
+        this.add.text(350, 348, Zombipede.score.toString(), 
+            { font: "bold 20px sans-serif", fill: "#fff", align: "center" });
         this.add.button(this.world.centerX + 60, 500, 'tweetButton', this.tweetScore, this);
 
     },
