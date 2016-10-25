@@ -1,10 +1,5 @@
-var snake, apple, squareSize, score, speed,
-    updateDelay, direction, new_direction,
-    addNew, cursors, scoreTextValue, speedTextValue, 
-    textStyle_Key, textStyle_Value, human;
-
-var lastCell, oldLastCellx, oldLastCelly;
-
+var snake, apple, score, speed,
+    human;
 
 //TODO: remove these globals !!!
 Zombipede.Game = function (game) {
@@ -39,6 +34,9 @@ Zombipede.Game.prototype = {
                 y: gameHeight - squareSize/2
             });
         }
+
+        this.textStyle_Key = { font: "bold 14px sans-serif", fill: "#46c0f9", align: "center" }; 
+        this.textStyle_Value = { font: "bold 18px sans-serif", fill: "#fff", align: "center" };
     },
 
     create : function() {
@@ -51,22 +49,18 @@ Zombipede.Game.prototype = {
  
         this.stage.backgroundColor = '#061f27';
 
-        textStyle_Key = { font: "bold 14px sans-serif", fill: "#46c0f9", align: "center" };
-        textStyle_Value = { font: "bold 18px sans-serif", fill: "#fff", align: "center" };
+        this.add.text(30, 20, "SCORE", this.textStyle_Key);
+        this.scoreTextValue = this.add.text(90, 18, score.toString(), this.textStyle_Value);
 
-
-        this.add.text(30, 20, "SCORE", textStyle_Key);
-        scoreTextValue = this.add.text(90, 18, score.toString(), textStyle_Value);
-
-        this.add.text(500, 20, "SPEED", textStyle_Key);
-        speedTextValue = this.add.text(558, 18, speed.toString(), textStyle_Value);
+        this.add.text(500, 20, "SPEED", this.textStyle_Key);
+        this.speedTextValue = this.add.text(558, 18, speed.toString(), this.textStyle_Value);
 
     },
 
     update: function() {
         //human.update();
         snake.update();
-        speedTextValue.text = '' + snake.speed;
+        this.speedTextValue.text = '' + snake.speed;
     },
 
     generateHuman: function(_game, snake) {
@@ -82,8 +76,8 @@ Zombipede.Game.prototype = {
             count++;
             if (count == 10) {
                     do {
-                        pos.x = Math.floor(Math.random()*this.cols*squareSize+squareSize/2);
-                        pos.y = Math.floor(Math.random()*this.rows*squareSize+squareSize/2);
+                        pos.x = Math.floor(Math.random()*(this.cols-1))*squareSize+squareSize/2;
+                        pos.y = Math.floor(Math.random()*(this.rows-1))*squareSize+squareSize/2;
                     } while (snake.isHere(pos.x, pos.y));
                 break;
             }

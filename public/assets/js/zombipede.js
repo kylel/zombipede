@@ -24,10 +24,55 @@ var Snake = function (game, food) {
     this.food = food;
     this.newDirection = null;
     this.addFrame = 0;
+    this.game.input.onDown.add(this.mouseDown, this);
+
 };
 
 Snake.prototype = Object.create(Object);
 Snake.prototype.constructor = Snake;
+
+Snake.prototype.mouseDown = function (pointer) {
+    let x = pointer.x;
+    let y = pointer.y;
+
+    if (y<=x) {
+        //top right -- either up or right
+        if (y<=gameHeight-x) {
+            if (this.direction!='down')
+            {
+                this.newDirection = 'up';
+            }    
+            //top
+            //console.log('top');
+        } else {
+            if (this.direction!='left')
+            {
+                this.newDirection = 'right';
+            }
+            //right
+            //console.log('right');
+        }
+    } else {
+        //bottom left -- either down or left
+        if (y<=gameHeight-x) {
+            if (this.direction!='right')
+            {
+                this.newDirection = 'left';
+            }
+            //left
+            //console.log('left');
+        } else {
+            if (this.direction!='up')
+            {
+                this.newDirection = 'down';
+            }
+            //console.log('bottom');
+        }
+    }
+    //console.log(pointer.x);
+    //console.log(pointer.y);
+    //console.log('mousedowqn');
+};
 
 Snake.prototype.checkInput = function () {
     if (this.cursors.right.isDown && this.direction!='left')
@@ -176,6 +221,6 @@ Snake.prototype.appleCollision = function() {
         this.food = this.game.generateHuman(this.game, this);//TODO fix this global var shiz
         human = this.food;
         score++;
-        scoreTextValue.text = score.toString();
+        this.game.scoreTextValue.text = score.toString();
     }
 };
