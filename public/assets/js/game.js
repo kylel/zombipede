@@ -7,30 +7,6 @@ Zombipede.Game.prototype = {
     preload : function() {
         this.rows = gameHeight/squareSize;
         this.cols = gameWidth/squareSize;
-        /*this.positions = [];
-
-        for (let i=0; i<this.rows; i++) {
-            this.positions.push({
-                x: squareSize/2,
-                y: i*squareSize+squareSize/2
-            });
-            this.positions.push({
-                x: gameWidth - squareSize/2,
-                y: i*squareSize+squareSize/2
-            });
-        }
-
-        for (let i=0; i<this.cols; i++) {
-            this.positions.push({
-                x: i*squareSize+squareSize/2,
-                y: squareSize/2
-            });
-            this.positions.push({
-                x: i*squareSize+squareSize/2,
-                y: gameHeight - squareSize/2
-            });
-        }*/
-
         this.textStyle_Key = { font: "bold 14px sans-serif", fill: "#46c0f9", align: "center" }; 
         this.textStyle_Value = { font: "bold 18px sans-serif", fill: "#fff", align: "center" };
     },
@@ -78,16 +54,16 @@ Zombipede.Game.prototype = {
 
         if (pos.x == squareSize/2) {
             apple.angle = 90;
-            apple.shirt.angle = 90;
+            //apple.shirt.angle = 90;
         } else if (pos.x == gameWidth - squareSize/2) {
             apple.angle = -90;
-            apple.shirt.angle = -90;
+            //apple.shirt.angle = -90;
         } else if (pos.y == squareSize/2) {
             apple.angle = 180;
-            apple.shirt.angle = 180;
+            //apple.shirt.angle = 180;
         } else {
             apple.angle = 0;
-            apple.shirt.angle = 0;
+            //apple.shirt.angle = 0;
         }
 
         return apple;

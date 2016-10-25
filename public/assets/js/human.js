@@ -8,11 +8,13 @@ var Human = function (_game, x,y, zombies) {
     this.updateDelay = 0;
     this.direction = 'right';
     this.zombies = zombies;
-    this.frame = 0;
+    this.frame = Math.floor(Math.random() * 4);
     this.alarmed = false;
-    this.shirt = _game.add.sprite(x,y,'human-shirts');
-    this.shirt.anchor.setTo(0.5);
-    this.shirt.frame = Math.floor(Math.random() * 4);;
+    //this.shirt = _game.add.sprite(x,y,'human-shirts');
+    //this.shirt.anchor.setTo(0.5);
+    //this.shirt.frame = Math.floor(Math.random() * 4);
+    this.startFrame = 4 + this.frame * 4;
+    this.endFrame = this.startFrame + 4;
 };
 
 Human.prototype = Object.create(Phaser.Sprite.prototype);
@@ -31,11 +33,13 @@ Human.prototype.move = function () {
     	if (dist < squareSize*4) {
     		step = squareSize;
     		this.alarmed = true;
-    		this.frame = 3;
+    		this.frame = this.startFrame;
     	}
     }
 
-
+    if (this.alarmed) {
+    	step = squareSize;
+    }
 
 	switch (this.direction) {
         case 'right':
@@ -63,19 +67,16 @@ Human.prototype.move = function () {
     	this.x = x;
     	this.y = y;
     	this.angle = angle;
-    	this.shirt.x = x;
-    	this.shirt.y = y;
-    	this.shirt.angle = angle;
+    	//this.shirt.x = x;
+    	//this.shirt.y = y;
+    	//this.shirt.angle = angle;
     }
     if (this.alarmed) {
     	this.frame+=1;
-    	if (this.frame > 7) {
-    		this.frame = 4;
+    	if (this.frame == this.endFrame || this.frame == 0) {
+    		this.frame = this.startFrame;
     	}
     }
-
-
-
 };
 
 Human.prototype.chooseDirection = function () {

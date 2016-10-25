@@ -244,8 +244,8 @@ Snake.prototype.wallCollision = function(head) {
 Snake.prototype.appleCollision = function() {
     if (this.segments[0].x == this.food.x && this.segments[0].y == this.food.y) {
         this.addNew = true;
-        this.addFrame = this.food.shirt.frame;
-        this.food.shirt.destroy();
+        this.addFrame = this.food.startFrame/4-1;
+        //this.food.shirt.destroy();
         this.food.destroy();
         this.food = this.game.generateHuman(this.game, this);
         Zombipede.human = this.food;
