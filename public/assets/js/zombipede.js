@@ -24,12 +24,66 @@ var Snake = function (game, food) {
     this.food = food;
     this.newDirection = null;
     this.addFrame = 0;
-    this.game.input.onDown.add(this.mouseDown, this);
+    this.game.input.onDown.add(this.beginSwipe, this);
+    //this.game.input.onDown.add(this.mouseDown, this);
 
 };
 
 Snake.prototype = Object.create(Object);
 Snake.prototype.constructor = Snake;
+
+
+Snake.prototype.beginSwipe = function (pointer) {
+    this.swipeStart = new Phaser.Point(pointer.x, pointer.y);
+    this.game.input.onDown.remove(this.beginSwipe);
+    this.game.input.onUp.add(this.endSwipe, this);
+};
+    
+    // function to be called when the player releases the mouse/finger
+ Snake.prototype.endSwipe = function(pointer) {
+    // saving mouse/finger coordinates
+    this.swipeEnd = new Phaser.Point(pointer.x, pointer.y);
+    // determining x and y distance travelled by mouse/finger from the start
+    // of the swipe until the end
+    let deltaX = this.swipeStart.x-this.swipeEnd.x;
+    let deltaY = this.swipeStart.y-this.swipeEnd.y;
+    // in order to have an horizontal swipe, we need that x distance is at least twice the y distance
+    // and the amount of horizontal distance is at least 10 pixels
+    if(Math.abs(deltaX)>Math.abs(deltaY)*2 && Math.abs(deltaX)>10){
+        // moving left, calling move function with horizontal and vertical tiles to move as arguments
+        if(deltaX>0){
+            if (this.direction!='right') {
+                this.newDirection = 'left';
+            }
+        }
+           // moving right, calling move function with horizontal and vertical tiles to move as arguments
+        else {
+            if (this.direction!='left') {
+                this.newDirection = 'right';
+            }
+        }
+    }
+    // in order to have a vertical swipe, we need that y distance is at least twice the x distance
+    // and the amount of vertical distance is at least 10 pixels
+    if(Math.abs(deltaY)>Math.abs(deltaX)*2 && Math.abs(deltaY)>10){
+        // moving up, calling move function with horizontal and vertical tiles to move as arguments
+        if(deltaY>0){
+            if (this.direction!='down') {
+                this.newDirection = 'up';
+            }
+        }
+        // moving down, calling move function with horizontal and vertical tiles to move as arguments
+        else {
+            if (this.direction!='up') {
+                this.newDirection = 'down';
+            }
+        }
+    }   
+        // stop listening for the player to release finger/mouse, let's start listening for the player to click/touch
+    this.game.input.onDown.add(this.beginSwipe, this);
+    this.game.input.onUp.remove(this.endSwipe);
+};
+
 
 Snake.prototype.mouseDown = function (pointer) {
     let x = pointer.x;
@@ -38,40 +92,26 @@ Snake.prototype.mouseDown = function (pointer) {
     if (y<=x) {
         //top right -- either up or right
         if (y<=gameHeight-x) {
-            if (this.direction!='down')
-            {
+            if (this.direction!='down') {
                 this.newDirection = 'up';
             }    
-            //top
-            //console.log('top');
         } else {
-            if (this.direction!='left')
-            {
+            if (this.direction!='left') {
                 this.newDirection = 'right';
             }
-            //right
-            //console.log('right');
         }
     } else {
         //bottom left -- either down or left
         if (y<=gameHeight-x) {
-            if (this.direction!='right')
-            {
+            if (this.direction!='right') {
                 this.newDirection = 'left';
             }
-            //left
-            //console.log('left');
         } else {
-            if (this.direction!='up')
-            {
+            if (this.direction!='up') {
                 this.newDirection = 'down';
             }
-            //console.log('bottom');
         }
     }
-    //console.log(pointer.x);
-    //console.log(pointer.y);
-    //console.log('mousedowqn');
 };
 
 Snake.prototype.checkInput = function () {
