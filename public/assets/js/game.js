@@ -11,7 +11,7 @@ Zombipede.Game.prototype = {
     preload : function() {
         this.rows = gameHeight/squareSize;
         this.cols = gameWidth/squareSize;
-        this.positions = [];
+        /*this.positions = [];
 
         for (let i=0; i<this.rows; i++) {
             this.positions.push({
@@ -33,7 +33,7 @@ Zombipede.Game.prototype = {
                 x: i*squareSize+squareSize/2,
                 y: gameHeight - squareSize/2
             });
-        }
+        }*/
 
         this.textStyle_Key = { font: "bold 14px sans-serif", fill: "#46c0f9", align: "center" }; 
         this.textStyle_Value = { font: "bold 18px sans-serif", fill: "#fff", align: "center" };
@@ -64,14 +64,17 @@ Zombipede.Game.prototype = {
     },
 
     generateHuman: function(_game, snake) {
-        let pos;
+        let pos = {
+            x:squareSize/2,
+            y:squareSize/2
+        };
         let count = 0; // this is a bit of a hack:
         //if the snake gets long enough to cover the entire circumference of the screen
         //it may block the generation of a new human indefinitely and crash the game here
         // so we give it a timeout and spawn the human in the middle of the screen...
         //TODO: not sure what else to do about it...
 
-        do {
+        /*do {
             pos = this.positions[Math.floor(Math.random()*this.positions.length)];
             count++;
             if (count == 10) {
@@ -83,7 +86,16 @@ Zombipede.Game.prototype = {
             }
         } while (snake.isHere(pos.x, pos.y));
 
-        
+        */
+
+        do {
+            pos.x = Math.floor(Math.random()*(this.cols-1))*squareSize+squareSize/2;
+            pos.y = Math.floor(Math.random()*(this.rows-1))*squareSize+squareSize/2;
+            count++;
+            if (count == 30) {
+                break;
+            }
+        } while (snake.isHere(pos.x, pos.y));
 
         let apple = new Human(_game, pos.x, pos.y, snake);
 
