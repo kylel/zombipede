@@ -23,3 +23,17 @@ Zombipede.Boot.prototype = {
 		//TODO orientation and scaling for mobile -- see phaser example projects
 	}
 };
+
+Zombipede.saveHighScore = function(score) {
+    let highScore = localStorage.getItem('highscore');
+    if(highScore === null || score > highScore){
+        localStorage.setItem('highscore', score);
+        highScore = score;
+    }
+    return highScore;
+};
+
+Zombipede.getHighScore = function() {
+    let highScore = localStorage.getItem('highscore');
+    return highScore || 0;
+};
