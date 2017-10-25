@@ -1,6 +1,6 @@
 # zombipede
 
-Snakelike game using [Phaser](http://phaser.io/).
+[Snakelike](https://en.wikipedia.org/wiki/Snake_(video_game)) game using [Phaser](http://phaser.io/).
 
 ## Running
 
