@@ -18,6 +18,7 @@ Open your browser and input the following URL:
 open a command window / terminal and run:
 
 > cd ./Public
+
 > python -m SimpleHTTPServer
 
 Open your browser and input the following URL:
