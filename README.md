@@ -1,5 +1,7 @@
 # zombipede
 
+![](https://github.com/kylel/zombipede/blob/master/public/assets/images/zombie-anim.png)
+
 [Snakelike](https://en.wikipedia.org/wiki/Snake_(video_game)) game using [Phaser](http://phaser.io/).
 
 ## Running
